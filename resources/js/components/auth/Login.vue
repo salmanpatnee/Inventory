@@ -10,13 +10,13 @@
                                     <div class="text-center">
                                         <h1 class="h4 text-gray-900 mb-4">Login</h1>
                                     </div>
-                                    <form class="user">
+                                    <form class="user" @submit.prevent="handleLogin">
                                         <div class="form-group">
-                                            <input type="email" class="form-control" id="email"
+                                            <input v-model="email" type="email" class="form-control" id="email"
                                                 placeholder="Enter Email Address">
                                         </div>
                                         <div class="form-group">
-                                            <input type="password" class="form-control" id="password"
+                                            <input v-model="password" type="password" class="form-control" id="password"
                                                 placeholder="Password">
                                         </div>
                                         <div class="form-group">
@@ -36,7 +36,8 @@
                                         <router-link class="font-weight-bold small" to="/register">Create an Account!
                                         </router-link>
                                     </div>
-                                    <div class="text-center">
+                                    <div v-if="errorMessage" class="text-center">
+                                        {{ errorMessage }}
                                     </div>
                                 </div>
                             </div>
@@ -47,3 +48,28 @@
         </div>
     </div>
 </template>
+
+<script>
+export default {
+    data() {
+        return {
+            email: '',
+            password: '',
+            errorMessage: ''
+        }
+    },
+    methods: {
+        async handleLogin() {
+            this.errorMessage = '';
+            try {
+                await this.$store.dispatch('login', {
+                    email: this.email, password: this.password
+                });
+                this.$router.push({ name: 'dashboard' });
+            } catch (error) {
+                this.errorMessage = error;
+            }
+        }
+    }
+}
+</script>

@@ -1,5 +1,7 @@
 import Vue from 'vue';
 import router from './routes';
+import store from './store/index';
+import App from './components/App';
 
 require('./bootstrap');
 
@@ -9,5 +11,9 @@ axios.defaults.baseURL = 'http://inventory.test/'
 
 const app = new Vue({
     el: '#app',
-    router
+    components: {
+        App
+    },
+    router,
+    store
 });

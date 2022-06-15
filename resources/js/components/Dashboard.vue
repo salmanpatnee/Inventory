@@ -3,10 +3,10 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-header">Example Component</div>
+                    <div class="card-header">Dashboard</div>
 
                     <div class="card-body">
-                        I'm an example component.
+                        {{ user.name }}
                     </div>
                 </div>
             </div>
@@ -15,9 +15,12 @@
 </template>
 
 <script>
-    export default {
-        mounted() {
-            console.log('Component mounted.')
-        }
+import { mapGetters } from 'vuex';
+export default {
+    computed: {
+        ...mapGetters([
+            'user'
+        ])
     }
+}
 </script>
