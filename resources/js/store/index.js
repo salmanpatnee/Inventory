@@ -42,15 +42,15 @@ const store = new Vuex.Store({
             }
         },
         async getUser({ commit }) {
-            const response = await axios.get('/api/user');
-
-            if (response.status == 200) {
-                commit('setUser', response.data);
-                commit('setAuthenticated', true);
-            } else {
-                commit('setUser', null);
-                commit('setAuthenticated', false);
-            }
+            await axios.get('/api/user')
+                .then(response => {
+                    commit('setUser', response.data);
+                    commit('setAuthenticated', true);
+                })
+                .catch(error => {
+                    commit('setUser', null);
+                    commit('setAuthenticated', false);
+                })
         },
         async logout({ commit }) {
             await axios.post('/api/logout')

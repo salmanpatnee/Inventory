@@ -9,11 +9,13 @@ import axios from 'axios';
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = 'http://inventory.test/'
 
-const app = new Vue({
-    el: '#app',
-    components: {
-        App
-    },
-    router,
-    store
+store.dispatch('getUser').then(() => {
+    const app = new Vue({
+        el: '#app',
+        components: {
+            App
+        },
+        router,
+        store
+    });
 });
