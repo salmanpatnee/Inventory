@@ -10,14 +10,27 @@
             </a>
             <hr class="sidebar-divider my-0">
             <li class="nav-item active">
-                <a class="nav-link" href="index.html">
+                <router-link class="nav-link" :to="{ name: 'dashboard' }">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Dashboard</span></a>
+                    <span>Dashboard</span>
+                </router-link>
             </li>
             <hr class="sidebar-divider">
-            <div class="sidebar-heading">
-                Features
-            </div>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#users" aria-expanded="true"
+                    aria-controls="users">
+                    <i class="far fa-fw fa-window-maximize"></i>
+                    <span>Users</span>
+                </a>
+                <div id="users" class="collapse" aria-labelledby="headingBootstrap" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <router-link class="collapse-item" :to="{ name: 'users.index' }">All Users</router-link>
+                        <router-link class="collapse-item" :to="{ name: 'users.create' }">Add User</router-link>
+
+                    </div>
+                </div>
+            </li>
+
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseBootstrap"
                     aria-expanded="true" aria-controls="collapseBootstrap">
@@ -37,6 +50,7 @@
                     </div>
                 </div>
             </li>
+
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseForm"
                     aria-expanded="true" aria-controls="collapseForm">
