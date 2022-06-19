@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Validation\Rule;
+use Yajra\DataTables\Facades\Datatables;
 
 class UsersController extends Controller
 {
@@ -16,6 +17,7 @@ class UsersController extends Controller
     {
         $this->authorizeResource(User::class, 'user');
     }
+
     /**
      * Display a listing of the resource.
      *

@@ -7,7 +7,7 @@ use App\Permissions\Permission;
 
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class UsersPolicy
+class UserPolicy
 {
     use HandlesAuthorization;
 
@@ -43,6 +43,7 @@ class UsersPolicy
     public function create(User $user)
     {
         return $user->can(Permission::CAN_CREATE_USERS);
+
     }
 
     /**
@@ -55,6 +56,7 @@ class UsersPolicy
     public function update(User $user, User $model)
     {
         return $user->can(Permission::CAN_UPDATE_USERS);
+       
     }
 
     /**

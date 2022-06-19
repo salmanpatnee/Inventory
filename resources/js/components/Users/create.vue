@@ -78,7 +78,6 @@
                                 <div class="col mt-3">
                                     <Button :form="form" class="btn btn-primary">{{ editMode ? "Update" : "Add" }} User
                                     </Button>
-                                    <!-- <button type="submit" class="btn btn-primary">Submit</button> -->
                                 </div>
                             </div>
                         </form>
@@ -95,7 +94,6 @@
 export default {
 
     data: () => ({
-        user: {},
         editMode: false,
         form: new Form({
             id: '',
@@ -109,33 +107,23 @@ export default {
     methods: {
         store() {
             this.form.post('/api/register').then(() => {
-                Toast.fire({
-                    icon: 'success',
-                    title: 'User Added.'
-                });
+                Notification.success('User Added');
                 this.$router.push({ name: 'users.index' })
             }).catch((error) => { });
 
         },
         update() {
             this.form.put('/api/users/' + this.form.id).then(() => {
-                Toast.fire({
-                    icon: 'success',
-                    title: 'User Updated.'
-                });
+                Notification.success('User Updated');
                 this.$router.push({ name: 'users.index' })
             }).catch((error) => { });
         }
     },
     created() {
-        if (this.$route.params.id) {
-            let id = this.$route.params.id;
+        if (this.$route.params.user) {
+            this.form.fill(this.$route.params.user);
             this.editMode = true;
-            this.form.get('/api/users/' + id).then((response) => {
-                this.form.fill(response.data.data);
-            }).catch((error) => { });
         }
-
     }
 }
 </script>

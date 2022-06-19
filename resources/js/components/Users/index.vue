@@ -24,6 +24,7 @@
                         <h6 class="m-0 font-weight-bold text-primary">All Users</h6>
                     </div>
                     <div class="table-responsive p-3">
+                        
                         <table class="table align-items-center table-flush" id="dataTable">
                             <thead class="thead-light">
                                 <tr>
@@ -56,7 +57,7 @@
                                     <td>{{ user.status }}</td>
                                     <td>{{ user.last_login }}</td>
                                     <td>
-                                        <router-link :to="{ name: 'users.edit', params: { id: user.id } }" href="#"
+                                        <router-link :to="{ name: 'users.edit', params: { user: user } }" href="#"
                                             class="btn btn-info btn-sm "><i class="fas fa-pencil-alt"></i></router-link>
                                         <a @click.prevent="destroy(user.id)" href="#" class="btn btn-danger btn-sm "><i
                                                 class="fas fa-trash"></i></a>
@@ -64,6 +65,7 @@
                                 </tr>
                             </tbody>
                         </table>
+                    
                     </div>
                 </div>
             </div>
@@ -84,32 +86,22 @@ export default {
             axios.get('/api/users').then(({ data }) => (this.users = data.data));
         },
         async destroy(id) {
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
+
+            Swal.fire(Notification.confirmDialogAtts()).then((result) => {
                 if (result.isConfirmed) {
                     const originalUsers = this.users;
 
                     this.users = this.users.filter(user => user.id != id);
                     axios.delete('/api/users/' + id).then(() => {
 
-                        Toast.fire({
-                            icon: 'success',
-                            title: 'User Deleted.'
-                        });
+                        Notification.success('User Deleted.');
+                    
                     }).catch((error) => {
+
                         this.users = originalUsers;
-                        Toast.fire({
-                            icon: 'error',
-                            title: 'Unexpected error occurred.'
-                        });
+                        Notification.error('Unexpected error occurred.');
                         console.log('Error', error);
+                    
                     });
                 }
             })
@@ -117,6 +109,7 @@ export default {
     },
     created() {
         this.getUsers();
+        
     }
 }
 </script>

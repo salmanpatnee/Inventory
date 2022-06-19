@@ -214,6 +214,7 @@ export default {
     methods: {
         async handleLogout() {
             await this.$store.dispatch('logout');
+            // Router.redirect('login');
             this.$router.push({ name: 'login' });
         }
     }

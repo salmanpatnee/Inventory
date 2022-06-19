@@ -14,24 +14,36 @@ const Routes = new VueRouter({
         { path: '/', component: Login, name: 'app' },
         { path: '/login', component: Login, name: 'login', alias: '/' },
         { path: '/register', component: Register, name: 'register' },
-        { path: '/dashboard', component: Dashboard, name: 'dashboard', meta: { requiredAuth: true } },
+        { path: '/dashboard', component: Dashboard, name: 'dashboard', meta: { requiresAuth: true } },
 
         //Users
-        { path: '/users', component: Users, name: 'users.index', meta: { requiredAuth: true } },
-        { path: '/users/create', component: User, name: 'users.create', meta: { requiredAuth: true } },
-        { path: '/users/edit/:id', component: User, name: 'users.edit', meta: { requiredAuth: true } },
+        { path: '/users', component: Users, name: 'users.index', meta: { requiresAuth: true, authorize: ['view-users'] } },
+        { path: '/users/create', component: User, name: 'users.create', meta: { requiresAuth: true, authorize: ['create-users'] } },
+        { path: '/users/edit/:id', component: User, name: 'users.edit', meta: { requiresAuth: true, authorize: ['update-users']} },
     ],
     mode: 'history'
 });
 
 Routes.beforeEach((to, from, next) => {
-    if (to.matched.some(record => record.meta.requiredAuth)) {
-        if (!store.getters.authenticated) {
-            next({ name: 'login' })
-        } else {
+    const {requiresAuth, authorize} = to.meta;
+    const {permissions} = store.getters.user.data;
+
+    if(requiresAuth){
+        if (store.getters.authenticated) {
             next();
+        } else {
+            next({ name: 'login' });
         }
+    } 
+
+    if(authorize){
+        if(!authorize.some(permission => permissions.includes(permission))){
+            next({ name: 'login' });
+        }
+    } else {
+        next();
     }
+
     next();
 });
 

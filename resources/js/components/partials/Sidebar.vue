@@ -16,7 +16,7 @@
                 </router-link>
             </li>
             <hr class="sidebar-divider">
-            <li class="nav-item">
+            <li class="nav-item" v-show="user.data.role === 'Admin'">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#users" aria-expanded="true"
                     aria-controls="users">
                     <i class="far fa-fw fa-window-maximize"></i>
@@ -122,7 +122,7 @@ import { mapGetters } from 'vuex';
 export default {
     computed: {
         ...mapGetters([
-            'authenticated'
+            'authenticated', 'user'
         ])
     },
 }

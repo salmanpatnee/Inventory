@@ -6,7 +6,7 @@
                     <div class="card-header">Dashboard</div>
 
                     <div class="card-body">
-                        {{ user.name }}
+                        {{ user.data.name }}
                     </div>
                 </div>
             </div>

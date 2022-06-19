@@ -5441,11 +5441,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
-      user: {},
       editMode: false,
       form: new Form({
         id: '',
@@ -5462,10 +5460,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       this.form.post('/api/register').then(function () {
-        Toast.fire({
-          icon: 'success',
-          title: 'User Added.'
-        });
+        Notification.success('User Added');
 
         _this.$router.push({
           name: 'users.index'
@@ -5476,10 +5471,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this2 = this;
 
       this.form.put('/api/users/' + this.form.id).then(function () {
-        Toast.fire({
-          icon: 'success',
-          title: 'User Updated.'
-        });
+        Notification.success('User Updated');
 
         _this2.$router.push({
           name: 'users.index'
@@ -5488,14 +5480,9 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   created: function created() {
-    var _this3 = this;
-
-    if (this.$route.params.id) {
-      var id = this.$route.params.id;
+    if (this.$route.params.user) {
+      this.form.fill(this.$route.params.user);
       this.editMode = true;
-      this.form.get('/api/users/' + id).then(function (response) {
-        _this3.form.fill(response.data.data);
-      })["catch"](function (error) {});
     }
   }
 });
@@ -5596,6 +5583,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -5619,31 +5608,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                Swal.fire({
-                  title: 'Are you sure?',
-                  text: "You won't be able to revert this!",
-                  icon: 'warning',
-                  showCancelButton: true,
-                  confirmButtonColor: '#3085d6',
-                  cancelButtonColor: '#d33',
-                  confirmButtonText: 'Yes, delete it!'
-                }).then(function (result) {
+                Swal.fire(Notification.confirmDialogAtts()).then(function (result) {
                   if (result.isConfirmed) {
                     var originalUsers = _this2.users;
                     _this2.users = _this2.users.filter(function (user) {
                       return user.id != id;
                     });
                     axios["delete"]('/api/users/' + id).then(function () {
-                      Toast.fire({
-                        icon: 'success',
-                        title: 'User Deleted.'
-                      });
+                      Notification.success('User Deleted.');
                     })["catch"](function (error) {
                       _this2.users = originalUsers;
-                      Toast.fire({
-                        icon: 'error',
-                        title: 'Unexpected error occurred.'
-                      });
+                      Notification.error('Unexpected error occurred.');
                       console.log('Error', error);
                     });
                   }
@@ -5941,7 +5916,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  computed: _objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_0__.mapGetters)(['authenticated']))
+  computed: _objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_0__.mapGetters)(['authenticated', 'user']))
 });
 
 /***/ }),
@@ -6193,6 +6168,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 return _this.$store.dispatch('logout');
 
               case 2:
+                // Router.redirect('login');
                 _this.$router.push({
                   name: 'login'
                 });
@@ -6210,6 +6186,80 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 /***/ }),
 
+/***/ "./resources/js/Helpers/Notification.js":
+/*!**********************************************!*\
+  !*** ./resources/js/Helpers/Notification.js ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
+var Notification = /*#__PURE__*/function () {
+  function Notification() {
+    _classCallCheck(this, Notification);
+  }
+
+  _createClass(Notification, [{
+    key: "toast",
+    value: function toast() {
+      var msg = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'Successfully Done';
+      var icon = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'success';
+      Toast.fire({
+        icon: icon,
+        title: msg
+      });
+    }
+  }, {
+    key: "success",
+    value: function success() {
+      var msg = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'Successfully Done';
+      this.toast(msg);
+    }
+  }, {
+    key: "alert",
+    value: function alert() {
+      var msg = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'Warning';
+      this.toast(msg, 'alert');
+    }
+  }, {
+    key: "error",
+    value: function error() {
+      var msg = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'Error';
+      this.toast(msg, 'error');
+    }
+  }, {
+    key: "confirmDialogAtts",
+    value: function confirmDialogAtts() {
+      var title = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'Are you sure?';
+      var text = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'You won\'t be able to revert this!';
+      return {
+        title: title,
+        text: text,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      };
+    }
+  }]);
+
+  return Notification;
+}();
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Notification = new Notification());
+
+/***/ }),
+
 /***/ "./resources/js/app.js":
 /*!*****************************!*\
   !*** ./resources/js/app.js ***!
@@ -6222,46 +6272,29 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _routes__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./routes */ "./resources/js/routes.js");
 /* harmony import */ var _store_index__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./store/index */ "./resources/js/store/index.js");
 /* harmony import */ var vform__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vform */ "./node_modules/vform/dist/vform.es.js");
-/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
-/* harmony import */ var sweetalert2__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(sweetalert2__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _Helpers_Notification__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Helpers/Notification */ "./resources/js/Helpers/Notification.js");
 /* harmony import */ var vform_src_components_bootstrap4__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! vform/src/components/bootstrap4 */ "./node_modules/vform/src/components/bootstrap4/index.js");
 /* harmony import */ var _components_App__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/App */ "./resources/js/components/App.vue");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_7__);
-
 
 
 
 
 
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
-/* Components */
+/* Helpers */
 
+
+
+window.Notification = _Helpers_Notification__WEBPACK_IMPORTED_MODULE_3__["default"];
+/* Components */
 
 
 
 vue__WEBPACK_IMPORTED_MODULE_6__["default"].component(vform_src_components_bootstrap4__WEBPACK_IMPORTED_MODULE_4__.Button.name, vform_src_components_bootstrap4__WEBPACK_IMPORTED_MODULE_4__.Button);
 vue__WEBPACK_IMPORTED_MODULE_6__["default"].component(vform_src_components_bootstrap4__WEBPACK_IMPORTED_MODULE_4__.HasError.name, vform_src_components_bootstrap4__WEBPACK_IMPORTED_MODULE_4__.HasError);
-vue__WEBPACK_IMPORTED_MODULE_6__["default"].component(vform_src_components_bootstrap4__WEBPACK_IMPORTED_MODULE_4__.AlertError.name, vform_src_components_bootstrap4__WEBPACK_IMPORTED_MODULE_4__.AlertError);
-vue__WEBPACK_IMPORTED_MODULE_6__["default"].component(vform_src_components_bootstrap4__WEBPACK_IMPORTED_MODULE_4__.AlertErrors.name, vform_src_components_bootstrap4__WEBPACK_IMPORTED_MODULE_4__.AlertErrors);
-vue__WEBPACK_IMPORTED_MODULE_6__["default"].component(vform_src_components_bootstrap4__WEBPACK_IMPORTED_MODULE_4__.AlertSuccess.name, vform_src_components_bootstrap4__WEBPACK_IMPORTED_MODULE_4__.AlertSuccess);
-
-(axios__WEBPACK_IMPORTED_MODULE_7___default().defaults.withCredentials) = true;
-(axios__WEBPACK_IMPORTED_MODULE_7___default().defaults.baseURL) = 'http://inventory.test/';
+axios.defaults.withCredentials = true;
+axios.defaults.baseURL = 'http://127.0.0.1:8000/';
 window.Form = vform__WEBPACK_IMPORTED_MODULE_2__.Form;
-window.Swal = (sweetalert2__WEBPACK_IMPORTED_MODULE_3___default());
-var Toast = sweetalert2__WEBPACK_IMPORTED_MODULE_3___default().mixin({
-  toast: true,
-  position: 'top-end',
-  showConfirmButton: false,
-  timer: 3000,
-  timerProgressBar: true,
-  didOpen: function didOpen(toast) {
-    toast.addEventListener('mouseenter', (sweetalert2__WEBPACK_IMPORTED_MODULE_3___default().stopTimer));
-    toast.addEventListener('mouseleave', (sweetalert2__WEBPACK_IMPORTED_MODULE_3___default().resumeTimer));
-  }
-});
-window.Toast = Toast;
 _store_index__WEBPACK_IMPORTED_MODULE_1__["default"].dispatch('getUser').then(function () {
   var app = new vue__WEBPACK_IMPORTED_MODULE_6__["default"]({
     el: '#app',
@@ -6286,12 +6319,25 @@ window._ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 try {
   __webpack_require__(/*! bootstrap */ "./node_modules/bootstrap/dist/js/bootstrap.esm.js");
 } catch (e) {}
+
+window.Swal = __webpack_require__(/*! sweetalert2 */ "./node_modules/sweetalert2/dist/sweetalert2.all.js");
+var Toast = Swal.mixin({
+  toast: true,
+  position: 'top-end',
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+  didOpen: function didOpen(toast) {
+    toast.addEventListener('mouseenter', Swal.stopTimer);
+    toast.addEventListener('mouseleave', Swal.resumeTimer);
+  }
+});
+window.Toast = Toast;
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
  * to our Laravel back-end. This library automatically handles sending the
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
-
 
 window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
@@ -6358,7 +6404,7 @@ var Routes = new vue_router__WEBPACK_IMPORTED_MODULE_7__["default"]({
     component: _components_Dashboard__WEBPACK_IMPORTED_MODULE_3__["default"],
     name: 'dashboard',
     meta: {
-      requiredAuth: true
+      requiresAuth: true
     }
   }, //Users
   {
@@ -6366,36 +6412,54 @@ var Routes = new vue_router__WEBPACK_IMPORTED_MODULE_7__["default"]({
     component: _components_Users_index__WEBPACK_IMPORTED_MODULE_4__["default"],
     name: 'users.index',
     meta: {
-      requiredAuth: true
+      requiresAuth: true,
+      authorize: ['view-users']
     }
   }, {
     path: '/users/create',
     component: _components_Users_create__WEBPACK_IMPORTED_MODULE_5__["default"],
     name: 'users.create',
     meta: {
-      requiredAuth: true
+      requiresAuth: true,
+      authorize: ['create-users']
     }
   }, {
     path: '/users/edit/:id',
     component: _components_Users_create__WEBPACK_IMPORTED_MODULE_5__["default"],
     name: 'users.edit',
     meta: {
-      requiredAuth: true
+      requiresAuth: true,
+      authorize: ['update-users']
     }
   }],
   mode: 'history'
 });
 Routes.beforeEach(function (to, from, next) {
-  if (to.matched.some(function (record) {
-    return record.meta.requiredAuth;
-  })) {
-    if (!_store_index__WEBPACK_IMPORTED_MODULE_0__["default"].getters.authenticated) {
+  var _to$meta = to.meta,
+      requiresAuth = _to$meta.requiresAuth,
+      authorize = _to$meta.authorize;
+  var permissions = _store_index__WEBPACK_IMPORTED_MODULE_0__["default"].getters.user.data.permissions;
+
+  if (requiresAuth) {
+    if (_store_index__WEBPACK_IMPORTED_MODULE_0__["default"].getters.authenticated) {
+      next();
+    } else {
       next({
         name: 'login'
       });
-    } else {
-      next();
     }
+  }
+
+  if (authorize) {
+    if (!authorize.some(function (permission) {
+      return permissions.includes(permission);
+    })) {
+      next({
+        name: 'login'
+      });
+    }
+  } else {
+    next();
   }
 
   next();
@@ -34618,7 +34682,7 @@ var render = function () {
           _c("div", { staticClass: "card-body" }, [
             _vm._v(
               "\n                    " +
-                _vm._s(_vm.user.name) +
+                _vm._s(_vm.user.data.name) +
                 "\n                "
             ),
           ]),
@@ -35123,7 +35187,7 @@ var render = function () {
                               attrs: {
                                 to: {
                                   name: "users.edit",
-                                  params: { id: user.id },
+                                  params: { user: user },
                                 },
                                 href: "#",
                               },
@@ -35626,47 +35690,61 @@ var render = function () {
             _vm._v(" "),
             _c("hr", { staticClass: "sidebar-divider" }),
             _vm._v(" "),
-            _c("li", { staticClass: "nav-item" }, [
-              _vm._m(0),
-              _vm._v(" "),
-              _c(
-                "div",
-                {
-                  staticClass: "collapse",
-                  attrs: {
-                    id: "users",
-                    "aria-labelledby": "headingBootstrap",
-                    "data-parent": "#accordionSidebar",
+            _c(
+              "li",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.user.data.role === "Admin",
+                    expression: "user.data.role === 'Admin'",
                   },
-                },
-                [
-                  _c(
-                    "div",
-                    { staticClass: "bg-white py-2 collapse-inner rounded" },
-                    [
-                      _c(
-                        "router-link",
-                        {
-                          staticClass: "collapse-item",
-                          attrs: { to: { name: "users.index" } },
-                        },
-                        [_vm._v("All Users")]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "router-link",
-                        {
-                          staticClass: "collapse-item",
-                          attrs: { to: { name: "users.create" } },
-                        },
-                        [_vm._v("Add User")]
-                      ),
-                    ],
-                    1
-                  ),
-                ]
-              ),
-            ]),
+                ],
+                staticClass: "nav-item",
+              },
+              [
+                _vm._m(0),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "collapse",
+                    attrs: {
+                      id: "users",
+                      "aria-labelledby": "headingBootstrap",
+                      "data-parent": "#accordionSidebar",
+                    },
+                  },
+                  [
+                    _c(
+                      "div",
+                      { staticClass: "bg-white py-2 collapse-inner rounded" },
+                      [
+                        _c(
+                          "router-link",
+                          {
+                            staticClass: "collapse-item",
+                            attrs: { to: { name: "users.index" } },
+                          },
+                          [_vm._v("All Users")]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "router-link",
+                          {
+                            staticClass: "collapse-item",
+                            attrs: { to: { name: "users.create" } },
+                          },
+                          [_vm._v("Add User")]
+                        ),
+                      ],
+                      1
+                    ),
+                  ]
+                ),
+              ]
+            ),
             _vm._v(" "),
             _vm._m(1),
             _vm._v(" "),

@@ -71,7 +71,7 @@ export default {
                 await this.$store.dispatch('login', {
                     email: this.email, password: this.password
                 });
-                this.$router.push({ name: 'dashboard' });
+                this.$router.push({ name: 'dashboard' })
             } catch (error) {
                 this.errorMessage = error;
             }
