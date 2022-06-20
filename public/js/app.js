@@ -6438,28 +6438,30 @@ Routes.beforeEach(function (to, from, next) {
   var _to$meta = to.meta,
       requiresAuth = _to$meta.requiresAuth,
       authorize = _to$meta.authorize;
-  var permissions = _store_index__WEBPACK_IMPORTED_MODULE_0__["default"].getters.user.data.permissions;
+  var authenticated = _store_index__WEBPACK_IMPORTED_MODULE_0__["default"].getters.authenticated;
 
   if (requiresAuth) {
-    if (_store_index__WEBPACK_IMPORTED_MODULE_0__["default"].getters.authenticated) {
+    if (authenticated) {
+      var permissions = _store_index__WEBPACK_IMPORTED_MODULE_0__["default"].getters.user.data.permissions;
+
+      if (authorize) {
+        if (!authorize.some(function (permission) {
+          return permissions.includes(permission);
+        })) {
+          next({
+            name: 'login'
+          });
+        }
+      } else {
+        next();
+      }
+
       next();
     } else {
       next({
         name: 'login'
       });
     }
-  }
-
-  if (authorize) {
-    if (!authorize.some(function (permission) {
-      return permissions.includes(permission);
-    })) {
-      next({
-        name: 'login'
-      });
-    }
-  } else {
-    next();
   }
 
   next();

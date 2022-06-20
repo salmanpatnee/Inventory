@@ -26,24 +26,28 @@ const Routes = new VueRouter({
 
 Routes.beforeEach((to, from, next) => {
     const {requiresAuth, authorize} = to.meta;
-    const {permissions} = store.getters.user.data;
+    
+    const {authenticated} = store.getters;
 
     if(requiresAuth){
-        if (store.getters.authenticated) {
+
+        if (authenticated) {
+
+            const {permissions} = store.getters.user.data;
+
+            if(authorize){
+                if(!authorize.some(permission => permissions.includes(permission))){
+                    next({ name: 'login' });
+                }
+            } else {
+                next();
+            }
+
             next();
         } else {
             next({ name: 'login' });
         }
     } 
-
-    if(authorize){
-        if(!authorize.some(permission => permissions.includes(permission))){
-            next({ name: 'login' });
-        }
-    } else {
-        next();
-    }
-
     next();
 });
 
